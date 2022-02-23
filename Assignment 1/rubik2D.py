@@ -7,27 +7,12 @@ import sys
 from search import *
 
 
-#################
-# Problem class #
-#################
-class Rubik2D(Problem):
-
-    def actions(self, state):
-        pass
-
-    def result(self, state, action):
-        pass
-
-    def goal_test(self, state):
-        pass
-
-
 ###############
 # State class #
 ###############
 class State:
 
-    def __init__(self, shape, grid, answer=None, move="Init"):
+    def __init__(self, shape: tuple, grid: list, answer: list=None, move: str="Init") -> None:
         self.shape = shape
         self.answer = answer
         self.grid = grid
@@ -38,6 +23,38 @@ class State:
         for line in self.grid:
             s += "".join(line) + "\n"
         return s
+
+
+#################
+# Problem class #
+#################
+class Rubik2D(Problem):
+
+    def actions(self, state: State) -> list:
+        act = []
+        m, n = state.shape
+        for i in range(m):
+            act.append(f"r{i}")
+        for j in range(n):
+            act.append(f"c{j}")
+        return act
+
+    def result(self, state: State, action: str) -> State:
+        new_grid = state.grid
+        if action[0] == "r":
+            index = int(action[1])
+            old_tup = new_grid[index]
+            new_tup = old_tup[-1] + old_tup[1:]
+            new_grid[index] = new_tup
+        else:
+            index = int(action[1])
+            for tup
+        new_state = State(state.shape, new_grid, state.answer, action)
+        pass
+
+    def goal_test(self, state):
+        pass
+
 
 
 def read_instance_file(filepath):
