@@ -48,7 +48,9 @@ class Rubik2D(Problem):
             new_grid[index] = new_tup
         else:
             index = int(action[1])
-            for tup
+            for row_ind in range(len(new_grid)):
+                mem_elem = new_grid[row_ind][index]
+
         new_state = State(state.shape, new_grid, state.answer, action)
         pass
 
