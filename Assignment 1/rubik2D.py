@@ -53,19 +53,16 @@ class Rubik2D(Problem):
         if action[0] == "r":
             index = int(action[1])
             old_grid[index] = old_grid[index][-1:] + old_grid[index][:-1]
-            new_grid = self.ltot(old_grid)
         else:
             index = int(action[1])
             m, n = state.shape
             m = m-1
             reminder = state.grid[m][index]
             for i in range(m):
-                old_tup = old_grid[m-i]
-                new_tup = old_tup[:index] + (state.grid[m-i-1][index],) + old_tup[index+1:]
-                old_grid[m-i] = new_tup
-            old_tup = old_grid[0]
-            new_tup = old_tup[:index] + (reminder,) + old_tup[index+1:]
-            old_grid[0] = new_tup
+                old_grid[m-i][index] = state.grid[m-i-1][index]
+            old_grid[0][index] = reminder
+
+        new_grid = self.ltot(old_grid)
         new_state = State(state.shape, new_grid, state.answer, action)
         
         return new_state
