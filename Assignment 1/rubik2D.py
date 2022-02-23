@@ -48,14 +48,20 @@ class Rubik2D(Problem):
             new_grid[index] = new_tup
         else:
             index = int(action[1])
-            for row_ind in range(len(new_grid)):
-                mem_elem = new_grid[row_ind][index]
-
+            m, n = state.shape
+            for i in range(m-1):
+                old_tup = new_grid[m-i]
+                new_tup = old_tup[:index] + (state.grid[m-i-1][index],) + old_tup[index+1:]
+                new_grid[i] = new_tup
+            old_tup = new_grid[0]
+            new_tup = old_tup[:index] + (state.grid[m-1][index],) + old_tup[index+1:]
+            new_grid[0] = new_tup
         new_state = State(state.shape, new_grid, state.answer, action)
-        pass
+        
+        return new_state
 
-    def goal_test(self, state):
-        pass
+    def goal_test(self, state: State):
+        return state.grid == state.answer
 
 
 
