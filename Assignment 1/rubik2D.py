@@ -49,12 +49,13 @@ class Rubik2D(Problem):
         else:
             index = int(action[1])
             m, n = state.shape
-            for i in range(m-1):
+            m = m-1
+            for i in range(m):
                 old_tup = new_grid[m-i]
                 new_tup = old_tupe[:index] + (state.grid[m-i-1][index],) + old_tup[index+1:]
-                new_grid[i] = new_tup
+                new_grid[m-i] = new_tup
             old_tup = new_grid[0]
-            new_tup = old_tupe[:index] + (state.grid[m-1][index],) + old_tup[index+1:]
+            new_tup = old_tupe[:index] + (state.grid[m][index],) + old_tup[index+1:]
             new_grid[0] = new_tup
         new_state = State(state.shape, new_grid, state.answer, action)
         
