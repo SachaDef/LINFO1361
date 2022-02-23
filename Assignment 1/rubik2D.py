@@ -70,16 +70,16 @@ class Rubik2D(Problem):
     def goal_test(self, state: State):
         return state.grid == state.answer
 
-state1 = State((3, 3), (('1', '2', '3'), ('4', '5', '6'), ('7', '8', '9')), [('7', '1', '9'), ('3', '5', '2'), ('4', '8', '6')], "Init")
-prob = Rubik2D(state1)
-print(state1)
-state2 = prob.result(state1, "r0")
-print(state2)
-state3 = prob.result(state2, "c2")
-print(state3)
-state4 = prob.result(state3, "c0")
-print(state4)
-print(prob.goal_test(state3))
+# state1 = State((3, 3), (('1', '2', '3'), ('4', '5', '6'), ('7', '8', '9')), (('7', '1', '9'), ('3', '5', '2'), ('4', '8', '6')), "Init")
+# prob = Rubik2D(state1)
+# print(state1)
+# state2 = prob.result(state1, "r0")
+# print(state2)
+# state3 = prob.result(state2, "c2")
+# print(state3)
+# state4 = prob.result(state3, "c0")
+# print(state4)
+# print(prob.goal_test(state4))
 
 
 def read_instance_file(filepath):
@@ -111,7 +111,7 @@ if __name__ == "__main__":
 
     # Example of search
     start_timer = time.perf_counter()
-    node, nb_explored, remaining_nodes = breadth_first_tree_search(problem)
+    node, nb_explored, remaining_nodes = depth_first_tree_search(problem)
     end_timer = time.perf_counter()
 
     # Example of print
