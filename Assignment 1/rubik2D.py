@@ -12,7 +12,7 @@ from search import *
 #################
 class Rubik2D(Problem):
 
-    def __init__(self, initial: State, goal=None):
+    def __init__(self, initial, goal=None):
         super().__init__(initial, goal)
         self.acts = []
         m, n = self.initial.shape
@@ -24,10 +24,10 @@ class Rubik2D(Problem):
                 self.acts.append(f"c:{i}:{j+1}")
 
 
-    def actions(self, state: State) -> list:
+    def actions(self, state):
         return self.acts
 
-    def result(self, state: State, action: str) -> State:
+    def result(self, state, action):
         old_grid = state.grid
         index = int(action.split(":")[1])
         count = int(action.split(":")[2])
@@ -41,7 +41,7 @@ class Rubik2D(Problem):
         
         return State(state.shape, new_grid, state.answer, action)
 
-    def goal_test(self, state: State):
+    def goal_test(self, state):
         return state.grid == state.answer
 
 
@@ -50,22 +50,22 @@ class Rubik2D(Problem):
 ###############
 class State:
 
-    def __init__(self, shape: tuple, grid: list, answer: list=None, move: str="Init") -> None:
+    def __init__(self, shape, grid, answer=None, move="Init"):
         self.shape = shape
         self.answer = answer
         self.grid = grid
         self.move = move
 
-    def __str__(self) -> str:
+    def __str__(self):
         s = self.move + "\n"
         for line in self.grid:
             s += "".join(line) + "\n"
         return s
 
-    def __hash__(self) -> int:
+    def __hash__(self):
         return hash(self.grid)
 
-    def __eq__(self, o: object) -> bool:
+    def __eq__(self, o):
         return self.grid == o.grid if type(o) == State else False
 
 
