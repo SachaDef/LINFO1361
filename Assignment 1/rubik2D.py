@@ -83,9 +83,17 @@ def read_instance_file(filepath):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print(f"Usage: ./rubik2D.py <path_to_instance_file>")
+    if len(sys.argv) != 3:
+        print(f"Usage: ./rubik2D.py <path_to_instance_file> <search_func>")
     filepath = sys.argv[1]
+    if sys.argv[2] == "bfst":
+        search = breadth_first_tree_search
+    elif sys.argv[2] == "bfsg":
+        search = breadth_first_graph_search
+    elif sys.argv[2] == "dfst":
+        search = depth_first_tree_search
+    elif sys.argv[2] == "dfsg":
+        search = depth_first_graph_search
 
     shape, initial_grid, goal_grid = read_instance_file(filepath)
 
@@ -95,7 +103,7 @@ if __name__ == "__main__":
 
     # Example of search
     start_timer = time.perf_counter()
-    node, nb_explored, remaining_nodes = breadth_first_graph_search(problem)
+    node, nb_explored, remaining_nodes = search(problem)
     end_timer = time.perf_counter()
 
     # Example of print
