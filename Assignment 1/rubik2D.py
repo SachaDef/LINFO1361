@@ -7,30 +7,6 @@ import sys
 from search import *
 
 
-###############
-# State class #
-###############
-class State:
-
-    def __init__(self, shape: tuple, grid: list, answer: list=None, move: str="Init") -> None:
-        self.shape = shape
-        self.answer = answer
-        self.grid = grid
-        self.move = move
-
-    def __str__(self) -> str:
-        s = self.move + "\n"
-        for line in self.grid:
-            s += "".join(line) + "\n"
-        return s
-
-    def __hash__(self) -> int:
-        return hash(self.grid)
-
-    def __eq__(self, o: object) -> bool:
-        return self.grid == o.grid if type(o) == State else False
-
-
 #################
 # Problem class #
 #################
@@ -69,6 +45,30 @@ class Rubik2D(Problem):
         return state.grid == state.answer
 
 
+###############
+# State class #
+###############
+class State:
+
+    def __init__(self, shape: tuple, grid: list, answer: list=None, move: str="Init") -> None:
+        self.shape = shape
+        self.answer = answer
+        self.grid = grid
+        self.move = move
+
+    def __str__(self) -> str:
+        s = self.move + "\n"
+        for line in self.grid:
+            s += "".join(line) + "\n"
+        return s
+
+    def __hash__(self) -> int:
+        return hash(self.grid)
+
+    def __eq__(self, o: object) -> bool:
+        return self.grid == o.grid if type(o) == State else False
+
+
 def read_instance_file(filepath):
     with open(filepath) as fd:
         lines = fd.read().splitlines()
@@ -87,14 +87,13 @@ def read_instance_file(filepath):
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print(f"Usage: ./rubik2D.py <path_to_instance_file> <search_func>")
+        print(f"Usage: ./rubik2D.py <path_to_instance_file>")
     filepath = sys.argv[1]
 
     shape, initial_grid, goal_grid = read_instance_file(filepath)
 
     init_state = State(shape, tuple(initial_grid), tuple(goal_grid), "Init")
     problem = Rubik2D(init_state)
-    print(init_state.grid)
 
     # Example of search
     start_timer = time.perf_counter()
