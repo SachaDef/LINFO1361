@@ -30,6 +30,15 @@ class State:
 #################
 class Rubik2D(Problem):
 
+    def __init__(self, initial: State, goal=None):
+        super().__init__(initial, goal)
+
+    # def ltot(self, l):
+    #     return tuple(self.ltot(x) for x in l) if type(l) is list else l
+
+    # def ttol(self, t):
+    #     return list(self.ttol(x) for x in t) if type(t) is tuple else t
+
     def actions(self, state: State) -> list:
         act = []
         m, n = state.shape
@@ -40,34 +49,32 @@ class Rubik2D(Problem):
         return act
 
     def result(self, state: State, action: str) -> State:
-        new_grid = state.grid
+        old_grid = state.grid
         if action[0] == "r":
             index = int(action[1])
-            old_tup = new_grid[index]
-            new_tup = old_tup[-1] + old_tup[1:]
-            new_grid[index] = new_tup
+            old_tup = old_grid[index]
+            new_tup = old_tup[-1:] + old_tup[:-1]
+            new_grid = old_grid[:index] + (new_tup,) + old_grid[index+1:]
         else:
             index = int(action[1])
             m, n = state.shape
-            m = m-1
-            ligne1 = state.grid[0][:index] + (state.grid[2][index],) + state.grid[0][index+1:]
-            grid_without_l1 = (tab[2-i][:index] + (tab[2-i-1][index],) + tab[2-i][index+1:] for i in range(2))
-
-            for i in range(m):
-                old_tup = new_grid[m-i]
-                new_tup = old_tup[:index] + (state.grid[m-i-1][index],) + old_tup[index+1:]
-                new_grid[m-i] = new_tup
-            old_tup = new_grid[0]
-            new_tup = old_tup[:index] + (state.grid[m][index],) + old_tup[index+1:]
-            new_grid[0] = new_tup
-    
-        new_state = State(state.shape, new_grid, state.answer, action)
+            new_grid = tuple((old_grid[i][:index] + (old_grid[(m-1+i)%m][index],) + old_grid[i][index+1:] for i in range(m)))
         
-        return new_state
+        return State(state.shape, new_grid, state.answer, action)
 
     def goal_test(self, state: State):
         return state.grid == state.answer
 
+# state1 = State((3, 3), (('1', '2', '3'), ('4', '5', '6'), ('7', '8', '9')), (('7', '1', '9'), ('3', '5', '2'), ('4', '8', '6')), "Init")
+# prob = Rubik2D(state1)
+# print(state1)
+# state2 = prob.result(state1, "r0")
+# print(state2)
+# state3 = prob.result(state2, "c2")
+# print(state3)
+# state4 = prob.result(state3, "c0")
+# print(state4)
+# print(prob.goal_test(state4))
 
 
 def read_instance_file(filepath):
@@ -98,7 +105,7 @@ if __name__ == "__main__":
 
     # Example of search
     start_timer = time.perf_counter()
-    node, nb_explored, remaining_nodes = breadth_first_tree_search(problem)
+    node, nb_explored, remaining_nodes = breadth_first_graph_search(problem)
     end_timer = time.perf_counter()
 
     # Example of print
