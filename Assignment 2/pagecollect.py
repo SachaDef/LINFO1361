@@ -11,7 +11,6 @@ class State:
     def __init__(self, grid: list) -> None:
         self.nbr = len(grid)
         self.nbc = len(grid[0])
-        self.grid = grid
 
     def __str__(self) -> str:
         '\n'.join(''.join(row) for row in self.grid)
