@@ -7,63 +7,66 @@ import sys
 from search import *
 
 
-###############
-# State class #
-###############
-class State:
-
-    def __init__(self, shape: tuple, grid: list, answer: list=None, move: str="Init") -> None:
-        self.shape = shape
-        self.answer = answer
-        self.grid = grid
-        self.move = move
-
-    def __str__(self) -> str:
-        s = self.move + "\n"
-        for line in self.grid:
-            s += "".join(line) + "\n"
-        return s
-
-    def __hash__(self) -> int:
-        return self.grid.__hash__()
-
-    def __eq__(self, __o: object) -> bool:
-        return self.grid == object.grid
-
-
 #################
 # Problem class #
 #################
 class Rubik2D(Problem):
 
-    def __init__(self, initial: State, goal=None):
+    def __init__(self, initial, goal=None):
         super().__init__(initial, goal)
-
-    def actions(self, state: State) -> list:
-        act = []
-        m, n = state.shape
+        self.acts = []
+        m, n = self.initial.shape
         for i in range(m):
-            act.append(f"r{i}")
-        for j in range(n):
-            act.append(f"c{j}")
-        return act
+            for j in range(m-1):
+                self.acts.append(f"r:{i}:{j+1}")
+        for i in range(n):
+            for j in range(n-1):
+                self.acts.append(f"c:{i}:{j+1}")
 
-    def result(self, state: State, action: str) -> State:
+
+    def actions(self, state):
+        return self.acts
+
+    def result(self, state, action):
         old_grid = state.grid
+        index = int(action.split(":")[1])
+        count = int(action.split(":")[2])
         if action[0] == "r":
-            index = int(action[1])
             old_tup = old_grid[index]
-            new_tup = old_tup[-1:] + old_tup[:-1]
+            new_tup = old_tup[-count:] + old_tup[:-count]
             new_grid = old_grid[:index] + (new_tup,) + old_grid[index+1:]
         else:
-            index = int(action[1])
             m, n = state.shape
-            new_grid = tuple((old_grid[i][:index] + (old_grid[(m-1+i)%m][index],) + old_grid[i][index+1:] for i in range(m)))
+            new_grid = tuple((old_grid[i][:index] + (old_grid[(m-count+i)%m][index],) + old_grid[i][index+1:] for i in range(m)))
         
         return State(state.shape, new_grid, state.answer, action)
 
-    def goal_test(self, state: State):
+    def goal_test(self, state):
         return state.grid == state.answer
+
+
+###############
+# State class #
+###############
+class State:
+
+    def __init__(self, shape, grid, answer=None, move="Init"):
+        self.shape = shape
+        self.answer = answer
+        self.grid = grid
+        self.move = move
+
+    def __str__(self):
+        s = self.move + "\n"
+        for line in self.grid:
+            s += "".join(line) + "\n"
+        return s
+
+    def __hash__(self):
+        return hash(self.grid)
+
+    def __eq__(self, o):
+        return self.grid == o.grid if type(o) == State else False
 
 
 def read_instance_file(filepath):
@@ -91,7 +94,6 @@ if __name__ == "__main__":
 
     init_state = State(shape, tuple(initial_grid), tuple(goal_grid), "Init")
     problem = Rubik2D(init_state)
-    print(init_state.grid)
 
     # Example of search
     start_timer = time.perf_counter()
