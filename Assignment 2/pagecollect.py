@@ -43,9 +43,11 @@ def dist_man(pos1, pos2) -> int:
 
 def h(state: State, final_pos: tuple) -> int:
     h = 0
-    for i in range(state.n_pages):
-        h += dist_man(state.player_pos, state.pages_pos[i])
-    h += dist_man(state.player_pos, final_pos)
+    if (state.n_pages !=0):
+        for i in range(state.n_pages):
+            h += dist_man(state.player_pos, state.pages_pos[i])
+    else:
+        h += dist_man(state.player_pos, final_pos)
     return h
 
 
@@ -146,9 +148,11 @@ class PageCollect(Problem):
     
     def h(self, node: Node) -> int:
         h = 0
-        for i in range(node.state.n_pages):
-            h += dist_man(node.state.player_pos,node.state.pages_pos[i])
-        h += dist_man(node.state.player_pos,self.goal_pos)
+        if (node.state.n_pages !=0):
+            for i in range(node.state.n_pages):
+                h += dist_man(node.state.player_pos,node.state.pages_pos[i])
+        else:
+            h += dist_man(node.state.player_pos,self.goal_pos)
         # print("valeur de h = " + str(h))
         return h
 
@@ -178,3 +182,4 @@ print('Number of moves: ' + str(node.depth))
 for n in path:
     print(n.state)  # assuming that the __str__ function of state outputs the correct format
     print()
+print('Number of moves: ' + str(node.depth))
