@@ -1,7 +1,7 @@
 from __future__ import annotations
 from search import *
 import time
-
+import copy
 ###############
 # State class #
 ###############
@@ -114,7 +114,7 @@ class PageCollect(Problem):
 
     
     def result(self, state: State, action: str) -> State:
-        grid = state.grid
+        grid = copy.deepcopy(state.grid)
         old_x, old_y = state.player_pos
 
         if action == 's':
@@ -127,7 +127,7 @@ class PageCollect(Problem):
             new_x, new_y = old_x-1, old_y
         
         n_pages = state.n_pages
-        pages_pos = state.pages_pos
+        pages_pos = copy.deepcopy(state.pages_pos)
         if grid[new_y][new_x] == "p":
             n_pages -= 1
             pages_pos.remove((new_x, new_y))
@@ -136,6 +136,8 @@ class PageCollect(Problem):
         grid[new_y][new_x] = "@"
 
         new_state = State(grid, state.cost+1, (new_x, new_y), n_pages, pages_pos, 0)
+        # print("fct result")
+        # print(new_state)
         new_state.heuristic = h(new_state, self.goal_pos)
         return new_state
 
@@ -147,6 +149,7 @@ class PageCollect(Problem):
         for i in range(node.state.n_pages):
             h += dist_man(node.state.player_pos,node.state.pages_pos[i])
         h += dist_man(node.state.player_pos,self.goal_pos)
+        # print("valeur de h = " + str(h))
         return h
 
     def load(path):
