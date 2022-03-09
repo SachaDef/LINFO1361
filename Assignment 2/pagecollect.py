@@ -1,6 +1,6 @@
 from __future__ import annotations
 from search import *
-
+from scipy.special import factorial
 
 ###############
 # State class #
@@ -36,6 +36,10 @@ class State:
         ))
 
 
+def dist_man(pos1, pos2) -> int:
+        return abs(pos1[0] - pos2[0]) + abs(pos1[1] - pos2[1])
+
+
 #################
 # Problem class #
 #################
@@ -69,6 +73,12 @@ class PageCollect(Problem):
         # print(self.n_pages)
         # print(self.pages_pos)
         # print(self.goal_pos)
+
+        # self.n_ways = factorial(self.n_pages)
+        # pages_order = []
+        # for i in range(self.n_ways):
+        
+
         
 
     def actions(self, state: State) -> list:
@@ -119,11 +129,13 @@ class PageCollect(Problem):
     
     def h(self, node: Node) -> float:
         h = 0.0
-        # ...
-        # compute an heuristic value
-        # ...
+        for i in range(self.n_pages):
+            h += dist_man(node.state.player_pos,self.pages_pos[i])
+        h += dist_man(node.state.player_pos,self.goal_pos)
         return h
     
+    
+
     def load(path):
         with open(path, 'r') as f:
             lines = f.readlines()
