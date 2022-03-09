@@ -1,5 +1,4 @@
 from __future__ import annotations
-from socket import ntohl
 from search import *
 
 
@@ -7,7 +6,7 @@ from search import *
 # State class #
 ###############
 class State:
-    def __init__(self, grid: list, cost=0, heuristic=0, player_pos=(0, 0)) -> None:
+    def __init__(self, grid: list, cost: int=0, heuristic: float=0.0, player_pos: tuple=(0, 0)) -> None:
         self.nbr = len(grid)
         self.nbc = len(grid[0])
         self.grid = grid
@@ -75,7 +74,7 @@ class PageCollect(Problem):
     def actions(self, state: State) -> list:
         acts = []
         grid = state.grid
-        print(state.player_pos)
+        # print(state.player_pos)
         player_x, player_y = state.player_pos
         if grid[player_y+1][player_x] != "#":
             # print(grid[player_y+1][player_x])
@@ -94,11 +93,29 @@ class PageCollect(Problem):
 
     
     def result(self, state: State, action: str) -> State:
-        pass
-        # return State(new_grid, state.cost+1, self.h())
+        grid = state.grid
+        old_x, old_y = state.player_pos
+
+        if action == 's':
+            new_x, new_y = old_x, old_y+1
+        elif action == 'n':
+            new_x, new_y = old_x, old_y-1
+        if action == 'e':
+            new_x, new_y = old_x+1, old_y
+        elif action == 'w':
+            new_x, new_y = old_x-1, old_y
+        
+        if grid[new_y][new_x] == "p":
+            self.n_pages -= 1
+            del self.pages_pos[self.pages_pos.index((new_x, new_y))]
+        
+        grid[old_y][old_x] = " "
+        grid[new_y][new_x] = "@"
+
+        return State(grid, state.cost+1, self.h(), (new_x, new_y))
 
     def goal_test(self, state: State) -> bool:
-        pass
+        return state == self.goal
     
     def h(self, node: Node) -> float:
         h = 0.0
