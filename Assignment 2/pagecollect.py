@@ -172,7 +172,7 @@ problem = PageCollect.load(sys.argv[1])
 
 # Example of search
 start_timer = time.perf_counter()
-node, nb_explored, remaining_nodes = astar_search(problem)
+node, nb_explored, remaining_nodes = breadth_first_graph_search(problem)
 end_timer = time.perf_counter()
 
 # example of print
