@@ -168,7 +168,7 @@ class PageCollect(Problem):
             final_goal.append(goal_row)
         initial.n_pages = n_pages
         initial.pages_pos = pages_pos
-        goal = State(final_goal, 0, self.goal_pos, 0, [], 0)
+        goal = State(final_goal, 0, 0, self.goal_pos, 0, [])
         super().__init__(initial, goal=goal)
 
     def actions(self, state: State) -> list:
@@ -233,7 +233,7 @@ class PageCollect(Problem):
         grid[old_y][old_x] = " "
         grid[new_y][new_x] = "@"
 
-        new_state = State(grid, state.cost+1, (new_x, new_y), n_pages, pages_pos, 0)
+        new_state = State(grid, state.cost+1, 0, (new_x, new_y), n_pages, pages_pos)
         new_state.heuristic = h(new_state, self.goal_pos)
         return new_state
 
@@ -283,8 +283,10 @@ end_timer = time.perf_counter()
 # example of print
 path = node.path()
 
-print('Number of moves: ' + str(node.depth))
 for n in path:
     print(n.state)  # assuming that the __str__ function of state outputs the correct format
     print()
-print('Number of moves: ' + str(node.depth))
+
+print("* Execution time:\t", str(end_timer - start_timer))
+print("* Path cost to goal:\t", node.depth, "moves")
+print("* #Nodes explored:\t", nb_explored)
