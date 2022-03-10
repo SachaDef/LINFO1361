@@ -178,8 +178,10 @@ end_timer = time.perf_counter()
 # example of print
 path = node.path()
 
-print('Number of moves: ' + str(node.depth))
+# print('Number of moves: ' + str(node.depth))
 for n in path:
     print(n.state)  # assuming that the __str__ function of state outputs the correct format
     print()
+print("* Execution time:\t", str(end_timer - start_timer))
+print("* #Nodes explored:\t", nb_explored)
 print('Number of moves: ' + str(node.depth))
