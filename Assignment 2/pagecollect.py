@@ -288,9 +288,7 @@ class PageCollect(Problem):
 problem = PageCollect.load(sys.argv[1])
 
 # Example of search
-start_timer = time.perf_counter()
-node, nb_explored, remaining_nodes = astar_search(problem)
-end_timer = time.perf_counter()
+node = astar_search(problem)
 
 # example of print
 path = node.path()
@@ -298,7 +296,3 @@ path = node.path()
 for n in path:
     print(n.state)  # assuming that the __str__ function of state outputs the correct format
     print()
-
-print("* Execution time:\t", str(end_timer - start_timer))
-print("* Path cost to goal:\t", node.depth, "moves")
-print("* #Nodes explored:\t", nb_explored)
